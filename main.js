@@ -5,18 +5,26 @@ require('isomorphic-fetch');
 
 let tray = null
 
+
+
+const fetchApi = () => {
+  fetch("http://date.jsontest.com/").then((response) => {
+    return response.json()
+  }).then((json) => {
+    tray.setTitle(json.time)
+  }).catch((error) => {
+    console.log("ERROR:", error)
+  })
+  setTimeout(fetchApi, 10)
+}
+
 const creatTray = () => {
   tray = new Tray('./green-earth.png')
   tray.setToolTip('This is my application.')
 
-  fetch("http://ip.jsontest.com/").then((response) => {
-    return response.json()
-  }).then((json) => {
-    tray.setTitle(json.ip)
-  }).catch((error) => {
-    console.log("ERROR:", error)
-  })
+  setTimeout(fetchApi, 10)
 }
+
 
 
 app.on('ready', creatTray)
