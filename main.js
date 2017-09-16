@@ -1,28 +1,56 @@
 'use strict';
 
 const {app, BrowserWindow, Menu, Tray} = require('electron')
-require('isomorphic-fetch');
+require('isomorphic-fetch')
+const ws = require('ws')
+
+const w = new ws('wss://api.bitfinex.com/ws/2')
 
 let tray = null
 
 
 
+w.on('message', (msg) => console.log(msg))
+
+let msg = ({ 
+  event: 'subscribe',
+  channel: 'ticker',
+  symbol: 'tBTCUSD'
+})
+
+
+
+w.on('open', () => w.send(JSON.stringify(msg)))
+
+
 const fetchApi = () => {
-  fetch("http://date.jsontest.com/").then((response) => {
-    return response.json()
-  }).then((json) => {
-    tray.setTitle(json.time)
-  }).catch((error) => {
-    console.log("ERROR:", error)
-  })
-  setTimeout(fetchApi, 10)
+  // fetch("http://coincap.io/page/BTC").then((response) => {
+  //   return response.json()
+  // }).then((json) => {
+  //   // console.log(json.price_usd)
+  //   tray.setTitle(json.price_usd.toString())
+  // }).catch((error) => {
+  //   console.log("ERROR:", error)
+  // })
+  // setTimeout(fetchApi, 100)
+
+  // request.get("http://coincap.io/page/BTC",
+  //   (error, response, body) => {
+  //     console.log(JSON.parse(body))
+  //     tray.setTitle(json.price_usd.toString())
+  // })
+
+  // request.get( 
+  //   `${url}/ticker/tBTCUSD`,
+  //   (error, response, body) => console.log(body)
+  // )
 }
 
 const creatTray = () => {
   tray = new Tray('./green-earth.png')
   tray.setToolTip('This is my application.')
 
-  setTimeout(fetchApi, 10)
+  fetchApi()
 }
 
 
