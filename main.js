@@ -2,58 +2,59 @@
 
 const {app, BrowserWindow, Menu, Tray} = require('electron')
 require('isomorphic-fetch')
-const ws = require('ws')
-
-const w = new ws('wss://api.bitfinex.com/ws/2')
-
+const WebSocket = require('ws')
+const webSocket = new WebSocket('wss://api.bitfinex.com/ws/2')
 let tray = null
 
-
-
-w.on('message', (msg) => console.log(msg))
-
-let msg = ({ 
-  event: 'subscribe',
-  channel: 'ticker',
-  symbol: 'tBTCUSD'
-})
-
-
-
-w.on('open', () => w.send(JSON.stringify(msg)))
-
-
-const fetchApi = () => {
-  // fetch("http://coincap.io/page/BTC").then((response) => {
-  //   return response.json()
-  // }).then((json) => {
-  //   // console.log(json.price_usd)
-  //   tray.setTitle(json.price_usd.toString())
-  // }).catch((error) => {
-  //   console.log("ERROR:", error)
-  // })
-  // setTimeout(fetchApi, 100)
-
-  // request.get("http://coincap.io/page/BTC",
-  //   (error, response, body) => {
-  //     console.log(JSON.parse(body))
-  //     tray.setTitle(json.price_usd.toString())
-  // })
-
-  // request.get( 
-  //   `${url}/ticker/tBTCUSD`,
-  //   (error, response, body) => console.log(body)
-  // )
-}
 
 const creatTray = () => {
   tray = new Tray('./green-earth.png')
   tray.setToolTip('This is my application.')
 
-  fetchApi()
+  let msg = ({
+    event: 'subscribe',
+    channel: 'ticker',
+    symbol: 'tBTCUSD'
+  })
+
+  webSocket.on('open', () => webSocket.send(JSON.stringify(msg)))
 }
 
 
+// https://bitfinex.readme.io/v2/reference#rest-public-ticker
+// https://bitfinex.readme.io/v2/reference#ws-public-ticker
+const findValue = (values, type) => {
+  const mapping = [
+    "BID",
+    "BID_SIZE",
+    "ASK",
+    "ASK_SIZE",
+    "DAILY_CHANGE",
+    "DAILY_CHANGE_PERC",
+    "LAST_PRICE",
+    "VOLUME",
+    "HIGH",
+    "LOW"
+  ]
+  const index = mapping.indexOf(type)
+
+  if (index >= 0) {
+    return values[index]
+  } else {
+    console.log(`Error: Can't map ${type} in message`)
+  }
+}
+
+const handleWebSocketMsg = (message) => {
+  const jsonMsg = JSON.parse(message)
+
+  if (Array.isArray(jsonMsg[1])) {
+    const lastPrice = findValue(jsonMsg[1], "LAST_PRICE")
+    tray.setTitle(lastPrice.toString())
+  }
+}
+
+webSocket.on('message', handleWebSocketMsg)
 
 app.on('ready', creatTray)
 
