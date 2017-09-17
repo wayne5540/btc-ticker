@@ -4,6 +4,8 @@ A trap app showing current BTC price, notify user when price drop/up significant
 
 Currently only support BTC and price is from Bitfinex since they have a better API doc to integrate :smirk:
 
+![](demo.png)
+
 ## Features
 
 - [x] Show currenct bitcoin price at menubar (WebSocket)
