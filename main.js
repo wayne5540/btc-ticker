@@ -7,7 +7,7 @@ let tray = null
 
 
 const creatTray = () => {
-  tray = new Tray('./green-earth.png')
+  tray = new Tray('./bitcoin-logo-16.png')
   tray.setToolTip('This is my application.')
 
   let msg = ({
@@ -49,7 +49,8 @@ const handleWebSocketMsg = (message) => {
 
   if (Array.isArray(jsonMsg[1])) {
     const lastPrice = findValue(jsonMsg[1], "LAST_PRICE")
-    tray.setTitle(lastPrice.toString())
+    const dailyChangePercentage = findValue(jsonMsg[1], "DAILY_CHANGE_PERC")
+    tray.setTitle(`${dailyChangePercentage}/${lastPrice}`)
   }
 }
 
