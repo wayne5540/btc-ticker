@@ -1,7 +1,7 @@
 {
   "name": "tutorial",
   "productName": "BTC Ticker",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "main.js",
   "author": "wayne <wayne.5540@gmail.com>",
   "license": "MIT",
