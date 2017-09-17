@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "./node_modules/.bin/electron .",
-    "package-mac": "./node_modules/.bin/electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-builds"
+    "build-mac": "./node_modules/.bin/electron-packager . --overwrite --out=release-builds"
   },
   "dependencies": {
     "ws": "^3.2.0"
