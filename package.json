@@ -1,16 +1,19 @@
 {
   "name": "tutorial",
+  "productName": "BTC Ticker",
   "version": "1.0.0",
   "main": "main.js",
   "author": "wayne <wayne.5540@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "./node_modules/.bin/electron ."
-  },
-  "devDependencies": {
-    "electron": "1.7.6"
+    "start": "./node_modules/.bin/electron .",
+    "package-mac": "./node_modules/.bin/electron-packager . --overwrite --platform=darwin --arch=x64 --out=release-builds"
   },
   "dependencies": {
     "ws": "^3.2.0"
+  },
+  "devDependencies": {
+    "electron": "1.7.6",
+    "electron-packager": "^9.1.0"
   }
 }
