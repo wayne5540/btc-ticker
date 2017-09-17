@@ -9,7 +9,7 @@ let tray = null
 
 const creatTray = () => {
   tray = new Tray(path.join(__dirname, 'bitcoin-logo-16.png'))
-  tray.setToolTip('This is my application.')
+  tray.setToolTip('24hrs % changes / BTC price')
 
   let msg = ({
     event: 'subscribe',
