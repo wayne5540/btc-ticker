@@ -3,11 +3,12 @@
 const {app, BrowserWindow, Menu, Tray} = require('electron')
 const WebSocket = require('ws')
 const webSocket = new WebSocket('wss://api.bitfinex.com/ws/2')
+const path = require('path')
 let tray = null
 
 
 const creatTray = () => {
-  tray = new Tray('./bitcoin-logo-16.png')
+  tray = new Tray(path.join(__dirname, 'bitcoin-logo-16.png'))
   tray.setToolTip('This is my application.')
 
   let msg = ({
