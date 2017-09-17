@@ -1,7 +1,6 @@
 'use strict';
 
 const {app, BrowserWindow, Menu, Tray} = require('electron')
-require('isomorphic-fetch')
 const WebSocket = require('ws')
 const webSocket = new WebSocket('wss://api.bitfinex.com/ws/2')
 let tray = null
