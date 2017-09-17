@@ -1,14 +1,13 @@
 # Electron Practice App
 
+A trap app showing current BTC price, notify user when price drop/up significantly
+
+Currently only support BTC and price is from Bitfinex since they have a better API doc to integrate :smirk:
+
 ## Features
 
 - [x] Show currenct bitcoin price at menubar (WebSocket)
 - [ ] Send notification when matching certain condition
-
-## TODOs
-
-- Show last 24 hrs changes percentage
-
 
 
 ## Getting Started
