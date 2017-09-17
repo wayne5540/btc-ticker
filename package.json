@@ -5,6 +5,7 @@
   "main": "main.js",
   "author": "wayne <wayne.5540@gmail.com>",
   "license": "MIT",
+  "repository": "https://github.com/wayne5540/btc-ticker",
   "scripts": {
     "start": "./node_modules/.bin/electron .",
     "build-mac": "./node_modules/.bin/electron-packager . --overwrite --out=release-builds"

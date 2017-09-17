@@ -15,7 +15,7 @@ Currently only support BTC and price is from Bitfinex since they have a better A
 ## Getting Started
 
 ```
-git clone repo bitcoin-ticker
+git clone https://github.com/wayne5540/btc-ticker.git bitcoin-ticker
 cd bitcoin-ticker
 yarn install
 yarn start
