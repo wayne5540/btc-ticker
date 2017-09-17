@@ -19,6 +19,14 @@ yarn install
 yarn start
 ```
 
+## Build
+
+Currenctly only tested at Mac
+
+```
+yarn build-mac
+```
+
 ## Licence
 
 MIT
