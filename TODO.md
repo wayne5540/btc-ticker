@@ -1,7 +1,11 @@
-## TODOs
+## DOING
 
 - [ ] Send notification when matching certain condition
   - notify user if absolute(last 10 minutes percentageChange) > 10%
+  - percentageChange: (highest price - current price) / current price
+
+## TODOs
+
 - [ ] Selectable notify strategy
 - [ ] High resolution icon
 - [ ] Change daily percentage format: -12%, +2.33%
