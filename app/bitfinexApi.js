@@ -1,4 +1,5 @@
 const request = require('request-promise')
+const helpers = require('./helpers/helper')
 const url = "https://api.bitfinex.com/v2"
 
 // // https://bitfinex.readme.io/v2/reference#rest-public-candles
@@ -51,12 +52,6 @@ const getTicker = async () => {
   return tickerObject(ticker)
 }
 
-
-const round = (value, precision) => {
-    const multiplier = Math.pow(10, precision || 0)
-    return Math.round(value * multiplier) / multiplier
-}
-
 const getTrending = async () => {
   const candles = await getCandles()
   const ticker = await getTicker()
@@ -64,7 +59,7 @@ const getTrending = async () => {
   const highestPrice = Math.max(...candles.map((candle) => candle.highest))
   const changePercentage = ((currenctPrice - highestPrice) / currenctPrice) * 100
 
-  return round(changePercentage, 2)
+  return helpers.round(changePercentage, 2)
 }
 
 module.exports = {

@@ -3,6 +3,7 @@
 // Library
 const path = require('path')
 const WebSocket = require('ws')
+const helpers = require('./helpers/helper')
 const { app, Tray, Notification } = require('electron')
 const { tickerObject, getTrending } = require('./bitfinexApi')
 
@@ -10,6 +11,7 @@ const { tickerObject, getTrending } = require('./bitfinexApi')
 const RECONNECTING_TIME = 60 * 1000 // 1 min
 const SILIENT_PERIOD = 5 * 60 * 1000 // 5 mins
 const TRENDING_INTERVAL = 60 * 1000 // 1 min
+const TRENDING_CHNAGE_TARGET = 0.001
 
 // global variables
 let webSocket = null
@@ -24,7 +26,7 @@ const handleWebSocketMsg = (message) => {
   if (Array.isArray(jsonMsg[1])) {
     const ticker = tickerObject(jsonMsg[1])
 
-    tray.setTitle(`${ticker.dailyChangePercentage}/${ticker.lastPrice}`)
+    tray.setTitle(`${helpers.round(ticker.dailyChangePercentage, 2)}%/${ticker.lastPrice}`)
   }
 }
 
@@ -85,12 +87,12 @@ const checkTrending = () => {
   }
 
   getTrending().then((trending) => {
-    if (trending > 0) {
+    if (trending > TRENDING_CHNAGE_TARGET) {
       showNotification("Price Rising!", `${trending}% since last 20 mins`)
       lastNotifiedAt = Date.now()
     }
 
-    if (trending < 0) {
+    if (trending < -TRENDING_CHNAGE_TARGET) {
       showNotification("Price Droping!", `${trending}% since last 20 mins`)
       lastNotifiedAt = Date.now()
     }
