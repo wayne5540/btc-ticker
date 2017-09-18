@@ -6,12 +6,14 @@ const {
   app,
   BrowserWindow,
   Menu,
-  Tray
+  Tray,
+  Notification
 } = require('electron')
 
 const {
   getCandles,
-  tickerObject
+  tickerObject,
+  getTrending
 } = require('./bitfinexApi')
 
 const WebSocket = require('ws')
@@ -19,11 +21,17 @@ const webSocket = new WebSocket('wss://api.bitfinex.com/ws/2')
 
 
 let tray = null
+let notification = null
 
 
 const creatTray = () => {
   tray = new Tray(path.join(__dirname, 'bitcoin-logo-16.png'))
   tray.setToolTip('24hrs % changes / BTC price')
+
+  if (Notification.isSupported()) {
+    setInterval(checkTrending, 60000)
+  }
+
 
   let msg = ({
     event: 'subscribe',
@@ -34,6 +42,22 @@ const creatTray = () => {
   webSocket.on('open', () => webSocket.send(JSON.stringify(msg)))
 }
 
+const checkTrending = () => {
+  getTrending().then((trending) => {
+    if (trending > 0) {
+      showNotification("Price Rising!", `${trending}% since last 20 mins`)
+    }
+
+    if (trending < 0) {
+      showNotification("Price Droping!", `${trending}% since last 20 mins`)
+    }
+  })
+}
+
+const showNotification = (title, subtitle) => {
+  notification = new Notification({ title: title, subtitle: subtitle })
+  notification.show()
+}
 
 const handleWebSocketMsg = (message) => {
   const jsonMsg = JSON.parse(message)
@@ -57,4 +81,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
