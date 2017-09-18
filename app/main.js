@@ -51,7 +51,7 @@ const connectWebSocket = () => {
   ws.on('error', (e) => console.log("Websocket Error:", e))
   ws.on('close', (e) => {
     console.log("Websocket Closed, reconnecting...: ", e)
-    reconnectWebSocket()
+    setTimeout(reconnectWebSocket, RECONNECTING_TIME);
   })
 
   return ws
