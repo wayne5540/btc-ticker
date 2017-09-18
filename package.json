@@ -2,7 +2,7 @@
   "name": "tutorial",
   "productName": "BTC Ticker",
   "version": "0.0.1",
-  "main": "main.js",
+  "main": "./app/main.js",
   "author": "wayne <wayne.5540@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/wayne5540/btc-ticker",

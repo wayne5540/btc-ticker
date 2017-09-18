@@ -22,6 +22,7 @@ const webSocket = new WebSocket('wss://api.bitfinex.com/ws/2')
 
 let tray = null
 let notification = null
+const trendingInterval = 60000 // 1 min
 
 
 const creatTray = () => {
@@ -29,9 +30,8 @@ const creatTray = () => {
   tray.setToolTip('24hrs % changes / BTC price')
 
   if (Notification.isSupported()) {
-    setInterval(checkTrending, 60000)
+    setInterval(checkTrending, trendingInterval)
   }
-
 
   let msg = ({
     event: 'subscribe',
