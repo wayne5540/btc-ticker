@@ -29,3 +29,8 @@
 ## TO FIX
 
 - [ ] 斷線／睡眠後 WebSocket 就斷了
+
+## 參考一下
+
+* https://blog.dcpos.ch/how-to-make-your-electron-app-sexy
+* https://github.com/webtorrent/webtorrent-desktop
