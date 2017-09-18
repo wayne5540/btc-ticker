@@ -1,63 +1,22 @@
 'use strict';
 
+// Library
 const path = require('path')
-
-const {
-  app,
-  BrowserWindow,
-  Menu,
-  Tray,
-  Notification
-} = require('electron')
-
-const {
-  getCandles,
-  tickerObject,
-  getTrending
-} = require('./bitfinexApi')
-
 const WebSocket = require('ws')
-const webSocket = new WebSocket('wss://api.bitfinex.com/ws/2')
+const { app, Tray, Notification } = require('electron')
+const { tickerObject, getTrending } = require('./bitfinexApi')
 
+// Constants
+const RECONNECTING_TIME = 60 * 1000 // 1 min
+const SILIENT_PERIOD = 5 * 60 * 1000 // 5 mins
+const TRENDING_INTERVAL = 60 * 1000 // 1 min
 
+// global variables
+let webSocket = null
 let tray = null
 let notification = null
-const trendingInterval = 60000 // 1 min
-
-
-const creatTray = () => {
-  tray = new Tray(path.join(__dirname, 'bitcoin-logo-16.png'))
-  tray.setToolTip('24hrs % changes / BTC price')
-
-  if (Notification.isSupported()) {
-    setInterval(checkTrending, trendingInterval)
-  }
-
-  let msg = ({
-    event: 'subscribe',
-    channel: 'ticker',
-    symbol: 'tBTCUSD'
-  })
-
-  webSocket.on('open', () => webSocket.send(JSON.stringify(msg)))
-}
-
-const checkTrending = () => {
-  getTrending().then((trending) => {
-    if (trending > 0) {
-      showNotification("Price Rising!", `${trending}% since last 20 mins`)
-    }
-
-    if (trending < 0) {
-      showNotification("Price Droping!", `${trending}% since last 20 mins`)
-    }
-  })
-}
-
-const showNotification = (title, subtitle) => {
-  notification = new Notification({ title: title, subtitle: subtitle })
-  notification.show()
-}
+let lastNotifiedAt = null
+let checkTrendingInterval = null
 
 const handleWebSocketMsg = (message) => {
   const jsonMsg = JSON.parse(message)
@@ -69,7 +28,80 @@ const handleWebSocketMsg = (message) => {
   }
 }
 
-webSocket.on('message', handleWebSocketMsg)
+const connectWebSocket = () => {
+  const ws = new WebSocket('wss://api.bitfinex.com/ws/2')
+
+  const msg = {
+    event: 'subscribe',
+    channel: 'ticker',
+    symbol: 'tBTCUSD'
+  }
+
+  ws.on('open', () => console.log("WebSocket Opened"))
+  ws.on('open', () => ws.send(JSON.stringify(msg)))
+  ws.on('message', handleWebSocketMsg)
+  ws.on('error', (e) => console.log("Websocket Error:", e))
+  ws.on('close', (e) => {
+    console.log("Websocket Closed, reconnecting...: ", e)
+    reconnectWebSocket()
+  })
+
+  return ws
+}
+
+const reconnectWebSocket = () => {
+  if (webSocket != null && webSocket.readyState == WebSocket.OPEN) {
+    webSocket.close()
+  }
+
+  webSocket = connectWebSocket()
+
+  setTimeout(() => {
+    if (webSocket.readyState !== WebSocket.OPEN) {
+      reconnectWebSocket()
+    }
+  }, RECONNECTING_TIME);
+}
+
+
+const creatTray = () => {
+  tray = new Tray(path.join(__dirname, 'bitcoin-logo-16.png'))
+  tray.setToolTip('24hrs % changes / BTC price')
+
+  if (Notification.isSupported()) {
+    checkTrendingInterval = setInterval(checkTrending, TRENDING_INTERVAL)
+  }
+
+  reconnectWebSocket()
+}
+
+const inSilentPeriod = () => (
+  lastNotifiedAt != null && Date.now() - lastNotifiedAt < SILIENT_PERIOD
+)
+
+const checkTrending = () => {
+  if (inSilentPeriod()) {
+    return
+  }
+
+  getTrending().then((trending) => {
+    if (trending > 0) {
+      showNotification("Price Rising!", `${trending}% since last 20 mins`)
+      lastNotifiedAt = Date.now()
+    }
+
+    if (trending < 0) {
+      showNotification("Price Droping!", `${trending}% since last 20 mins`)
+      lastNotifiedAt = Date.now()
+    }
+  })
+}
+
+const showNotification = (title, subtitle) => {
+  notification = new Notification({ title: title, subtitle: subtitle })
+  notification.show()
+}
+
 
 app.on('ready', creatTray)
 
