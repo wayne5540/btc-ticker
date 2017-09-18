@@ -4,7 +4,7 @@
 const path = require('path')
 const WebSocket = require('ws')
 const helpers = require('./helpers/helper')
-const { app, Tray, Notification } = require('electron')
+const { app, Tray, Notification, Menu, MenuItem } = require('electron')
 const { tickerObject, getTrending } = require('./bitfinexApi')
 
 // Constants
@@ -13,12 +13,18 @@ const SILIENT_PERIOD = 5 * 60 * 1000 // 5 mins
 const TRENDING_INTERVAL = 60 * 1000 // 1 min
 const TRENDING_CHNAGE_TARGET = 0.001
 
-// global variables
+// Global variables
 let webSocket = null
 let tray = null
 let notification = null
 let lastNotifiedAt = null
 let checkTrendingInterval = null
+const notifyMenuItem = new MenuItem({ label: 'Notify', type: 'checkbox' })
+const reconnectMenuItem = new MenuItem({
+  label: 'Reconnect', type: 'normal',
+  click: (_menuItem, _browserWindow, _event) => { webSocket.close() }
+})
+
 
 const handleWebSocketMsg = (message) => {
   const jsonMsg = JSON.parse(message)
@@ -69,6 +75,9 @@ const reconnectWebSocket = () => {
 const creatTray = () => {
   tray = new Tray(path.join(__dirname, 'bitcoin-logo-16.png'))
   tray.setToolTip('24hrs % changes / BTC price')
+  tray.setHighlightMode('never')
+
+  setContextMenu()
 
   if (Notification.isSupported()) {
     checkTrendingInterval = setInterval(checkTrending, TRENDING_INTERVAL)
@@ -77,12 +86,20 @@ const creatTray = () => {
   reconnectWebSocket()
 }
 
+const setContextMenu = () => {
+  const contextMenu = new Menu
+  contextMenu.append(notifyMenuItem)
+  contextMenu.append(reconnectMenuItem)
+
+  tray.setContextMenu(contextMenu)
+}
+
 const inSilentPeriod = () => (
   lastNotifiedAt != null && Date.now() - lastNotifiedAt < SILIENT_PERIOD
 )
 
 const checkTrending = () => {
-  if (inSilentPeriod()) {
+  if (!notifyMenuItem.checked || inSilentPeriod() ) {
     return
   }
 

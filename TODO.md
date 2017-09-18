@@ -7,6 +7,7 @@
 
 ## TODOs
 
+- [ ] WebSocket 斷線處理太麻煩了，看要不要改回 polling
 - [ ] Selectable notify strategy
 - [ ] High resolution icon
 - [ ] Setup app icon
@@ -22,8 +23,8 @@
   - notify user if absolute(last 10 minutes percentageChange) > 10%
   - percentageChange: (highest price - current price) / current price
 - [x] Change daily percentage format: -12%, 2.33%
-- [x] 斷線／睡眠後 WebSocket 就斷了
+
 
 ## TO FIX
 
-
+- [ ] 斷線／睡眠後 WebSocket 就斷了
