@@ -14,7 +14,6 @@
 - [ ] Cammand + Tab 時不要顯示 App since it's only a Tray app (like Dropbox, Spotifree, Alfred... etc)
 - [ ] Ticker 資訊佔太多空間，做成 image 當 Tray icon可以節省空間
   - https://github.com/Automattic/node-canvas
-- [ ] One click to open exchange website
 - [ ] Add auto start when login featrue
 
 ## DONE
@@ -24,6 +23,7 @@
   - percentageChange: (highest price - current price) / current price
 - [x] 沒網路時 initialize 會狂噴 errors
 - [x] Change daily percentage format: -12%, 2.33%
+- [x] One click to open exchange website
 
 
 ## TO FIX
