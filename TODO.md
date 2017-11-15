@@ -1,5 +1,6 @@
 ## DOING
 
+- [ ] 修好 build
 - [ ] Able to customise some variables
   - SILIENT_PERIOD
   - TRENDING_CHNAGE_TARGET
@@ -11,7 +12,6 @@
 - [ ] Selectable notify strategy
 - [ ] High resolution icon
 - [ ] Setup app icon
-- [ ] Cammand + Tab 時不要顯示 App since it's only a Tray app (like Dropbox, Spotifree, Alfred... etc)
 - [ ] Ticker 資訊佔太多空間，做成 image 當 Tray icon可以節省空間
   - https://github.com/Automattic/node-canvas
 - [ ] Add auto start when login featrue
@@ -24,7 +24,8 @@
 - [x] 沒網路時 initialize 會狂噴 errors
 - [x] Change daily percentage format: -12%, 2.33%
 - [x] One click to open exchange website
-
+- [x] Cammand + Tab 時不要顯示 App since it's only a Tray app (like Dropbox, Spotifree, Alfred... etc)
+  - app.dock.hide()
 
 ## TO FIX
 
