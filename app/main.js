@@ -128,6 +128,9 @@ const showNotification = (title, subtitle) => {
 
 
 app.on('ready', creatTray)
+app.on('ready', () => {
+  app.dock.hide()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
