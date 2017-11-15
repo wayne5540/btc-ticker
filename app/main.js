@@ -30,6 +30,15 @@ const bitfinexMenuItem = new MenuItem({
   click: (_menuItem, _browserWindow, _event) => { shell.openExternal('https://www.bitfinex.com/trading/BTCUSD') }
 })
 
+const MenuItemSeparator = new MenuItem({
+  type: 'separator'
+})
+
+const QuitMenuItem = new MenuItem({
+  label: 'Quit', type: 'normal',
+  click: (_menuItem, _browserWindow, _event) => { app.quit() }
+})
+
 
 const handleWebSocketMsg = (message) => {
   const jsonMsg = JSON.parse(message)
@@ -95,6 +104,8 @@ const setContextMenu = () => {
   contextMenu.append(notifyMenuItem)
   contextMenu.append(reconnectMenuItem)
   contextMenu.append(bitfinexMenuItem)
+  contextMenu.append(MenuItemSeparator)
+  contextMenu.append(QuitMenuItem)
 
   tray.setContextMenu(contextMenu)
 }
