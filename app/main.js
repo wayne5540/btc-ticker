@@ -3,7 +3,7 @@
 // Library
 const path = require('path')
 const WebSocket = require('ws')
-const opn = require('opn')
+const { shell } = require('electron')
 const helpers = require('./helpers/helper')
 const { app, Tray, Notification, Menu, MenuItem } = require('electron')
 const { tickerObject, getTrending } = require('./bitfinexApi')
@@ -27,7 +27,7 @@ const reconnectMenuItem = new MenuItem({
 })
 const bitfinexMenuItem = new MenuItem({
   label: 'Bitfinex', type: 'normal',
-  click: (_menuItem, _browserWindow, _event) => { opn('https://www.bitfinex.com/trading/BTCUSD') }
+  click: (_menuItem, _browserWindow, _event) => { shell.openExternal('https://www.bitfinex.com/trading/BTCUSD') }
 })
 
 
